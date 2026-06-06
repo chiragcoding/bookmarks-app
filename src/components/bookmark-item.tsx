@@ -20,35 +20,50 @@ export function BookmarkItem({
     setDeleting(false)
   }
 
+  // Extract domain for display
+  let domain = ''
+  try {
+    domain = new URL(bookmark.url).hostname.replace('www.', '')
+  } catch {
+    domain = bookmark.url
+  }
+
   return (
-    <li className="flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-3 shadow-sm">
+    <li className="group flex items-center gap-4 rounded-xl border border-zinc-200 bg-white px-5 py-4 shadow-sm transition-all hover:shadow-md hover:border-zinc-300">
+      {/* Favicon / domain initial */}
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-sm font-semibold text-zinc-600">
+        {domain[0]?.toUpperCase() ?? '?'}
+      </div>
+
+      {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <a
             href={bookmark.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="truncate text-sm font-medium text-zinc-900 hover:underline"
+            className="truncate text-sm font-semibold text-zinc-900 hover:text-blue-600 transition-colors"
           >
             {bookmark.title}
           </a>
           {bookmark.is_public ? (
-            <span className="shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+            <span className="shrink-0 inline-flex items-center rounded-full bg-green-50 border border-green-200 px-2 py-0.5 text-xs font-medium text-green-700">
               Public
             </span>
           ) : (
-            <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600">
+            <span className="shrink-0 inline-flex items-center rounded-full bg-zinc-50 border border-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-500">
               Private
             </span>
           )}
         </div>
-        <p className="mt-0.5 truncate text-xs text-zinc-500">{bookmark.url}</p>
+        <p className="mt-0.5 truncate text-xs text-zinc-500">{domain}</p>
       </div>
 
-      <div className="ml-4 flex shrink-0 items-center gap-1">
+      {/* Actions */}
+      <div className="flex shrink-0 items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={onEdit}
-          className="rounded p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
+          className="rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-colors"
           aria-label="Edit bookmark"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -58,7 +73,7 @@ export function BookmarkItem({
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="rounded p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+          className="rounded-lg p-2 text-zinc-400 hover:bg-red-50 hover:text-red-600 disabled:opacity-50 transition-colors"
           aria-label="Delete bookmark"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
